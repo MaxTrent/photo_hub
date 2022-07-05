@@ -1,5 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../models/photos_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
+import '../views/image_view.dart';
 
 Widget wallPaper(List<PhotosModel> listPhotos, BuildContext context) {
   return Container(
@@ -20,14 +24,33 @@ Widget wallPaper(List<PhotosModel> listPhotos, BuildContext context) {
                 context,
                 MaterialPageRoute(
                   builder: (context) => ImageView(
-                    imgPath: photoModel.src.portrait,
+                    imgPath: photoModel.src!.portrait,
                   )
                 )
-              )
+              );
             },
+            child: Hero(
+            tag: photoModel.src!.portrait,
+              child: Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: kIsWeb ? Image.network(
+                    photoModel.src!.portrait,
+                    height: 50,
+                    width: 100,
+                    fit: BoxFit.cover,
+                  ) : CachedNetworkImage(
+                      imageUrl: photoModel.src!.portrait,
+                    placeholder: (context, url) => Container(
+                      color: Colors.grey,
+                    ),
+                    fit: BoxFit.cover,
+                  )
+                ),
+              ),
           ),
         ),
         );
-      }),
+      }).toList(),
     ),
-  ),}
+  );}

@@ -23,13 +23,13 @@ class PhotosModel {
 }
 
 class SrcModel {
-  String? portrait;
+  String portrait;
   String? large;
   String? landscape;
   String? medium;
 
   SrcModel({
-    this.portrait, this.large, this.landscape, this.medium
+    required this.portrait, this.large, this.landscape, this.medium
   });
 
   factory SrcModel.fromMap(Map<String, dynamic> srcJson){
