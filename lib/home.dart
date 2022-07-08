@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -105,7 +107,8 @@ class _HomeState extends State<Home> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SearchView(
+                                    builder: (context) =>
+                                        SearchView(
                                           search: searchController.text,
                                         )));
                           }
@@ -121,19 +124,53 @@ class _HomeState extends State<Home> {
                   height: 10.0,
                 ),
                 Container(
-                  height: 80,
-                  child: ListView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    itemCount: categories.length,
-                    itemBuilder: (context, index){
-                      return CategoryTile(
-                        imgUrls: categories[index].imgUrl,
-                        category: categories[index].categoryName,
-                      );
-                    },
-                  )
+                    height: 80,
+                    child: ListView.builder(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      itemCount: categories.length,
+                      itemBuilder: (context, index) {
+                        return CategoryTile(
+                          imgUrls: categories[index].imgUrl,
+                          category: categories[index].categoryName,
+                        );
+                      },
+                    )
                 ),
                 wallPaper(photos, context),
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'Photos are gotten from ',
+                      style: TextStyle(
+                        color: Colors.black45,
+                        fontSize: 12,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        _launchUrl('https://www.pexels.com/');
+                      },
+                      child: Container(
+                          child: Text(
+                            'Pexels',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 12,
+                              fontFamily: 'Overpass',
+                            ),
+                          )
+                      ),
+                    )
+
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
               ],
             ),
           ),
@@ -144,17 +181,90 @@ class _HomeState extends State<Home> {
 class CategoryTile extends StatelessWidget {
   final String imgUrls, category;
 
-  CategoryTile({required this.imgUrls,required this.category});
+  CategoryTile({required this.imgUrls, required this.category});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => CategoryView(category: category))
+            context,
+            MaterialPageRoute(
+                builder: (context) => CategoryView(category: category))
         );
       },
+      child: Container(
+        margin: EdgeInsets.only(right: 8),
+        child: kIsWeb ? Column(
+          children: <Widget>[
+            ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: kIsWeb ? Image.network(
+                  imgUrls,
+                  height: 50,
+                  width: 100,
+                  fit: BoxFit.cover,
+                ) : CachedNetworkImage(
+                  imageUrl: imgUrls,
+                  height: 50,
+                  width: 100,
+                  fit: BoxFit.cover,
+                )
+            ),
+
+            SizedBox(
+              height: 5,
+            ),
+
+            Container(
+              width: 100,
+              alignment: Alignment.center,
+              child: Text(
+                category,
+                style: TextStyle(
+                    color: Colors.black45,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Overpass'),
+              ),
+            ),
+          ],
+        ) : Stack(
+          children: <Widget>[
+            ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: kIsWeb ? Image.network(
+                  imgUrls,
+                  height: 50,
+                  width: 100,
+                  fit: BoxFit.cover,): CachedNetworkImage(imageUrl: imgUrls,
+                height: 50,
+                width: 100,
+                fit: BoxFit.cover,)),
+            Container(
+              height: 50,
+              width: 100,
+              decoration: BoxDecoration(
+                  color: Colors.black45,
+                  borderRadius: BorderRadius.circular(8)
+              ),
+            ),
+            Container(
+              height: 50,
+              width: 100,
+              alignment: Alignment.center,
+              child: Text(
+                category ?? 'Yo Yo',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Overpass'),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
