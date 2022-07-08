@@ -71,9 +71,11 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(
-            'Wallpaper',
-            style: TextStyle(fontWeight: FontWeight.bold),
+          title: Center(
+            child: Text(
+              'Photo Hub',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
           backgroundColor: Colors.black54,
           elevation: 0.0,

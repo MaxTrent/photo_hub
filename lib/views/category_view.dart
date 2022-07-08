@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:wallpaper_app/Widgets/widget.dart';
 import 'package:wallpaper_app/data/data.dart';
 import 'package:flutter/material.dart';
 import 'package:wallpaper_app/models/photos_model.dart';
@@ -36,11 +37,27 @@ class _CategoryViewState extends State<CategoryView> {
     });
   }
 
+  @override
+  void initState(){
+    getCategoryWallpaper();
+    super.initState();
+  }
+
 
 
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Photo Hub'),
+        elevation: 0.0,
+        backgroundColor: Colors.blue,
+      ),
+      backgroundColor: Colors.blue,
+      body: SingleChildScrollView(
+        child: wallPaper(photos, context),
+      ),
+    );
   }
 }
